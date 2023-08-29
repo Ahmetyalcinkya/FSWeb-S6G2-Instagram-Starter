@@ -5,16 +5,21 @@
 */
 
 // State hook u import edin
-import React from "react";
-
+import React, { useState } from "react";
+import sahteVeri from "./sahte-veri";
+import AramaCubugu from "./bilesenler/AramaCubugu/AramaCubugu";
+import Gonderiler from "./bilesenler/Gonderiler/Gonderiler";
+// import { Yorumlar } from "./bilesenler/Yorumlar/Yorumlar";
 // Gönderiler (çoğul!) ve AramaÇubuğu bileşenlerini import edin, çünkü bunlar App bileşeni içinde kullanılacak
 // sahteVeri'yi import edin
 import "./App.css";
 
 const App = () => {
   // Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
+  const [gonderiler, setGonderiler] = useState(sahteVeri);
   // Artık sahteVeri'ye ihtiyacınız olmayacak.
   // Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
+  const [arama, setArama] = useState("");
 
   const gonderiyiBegen = (gonderiID) => {
     /*
@@ -28,14 +33,37 @@ const App = () => {
         - gönderinin idsi "gonderiID" ile eşleşirse, istenen değerlerle yeni bir gönderi nesnesi döndürün.
         - aksi takdirde, sadece gönderi nesnesini değiştirmeden döndürün.
      */
+    setGonderiler(
+      gonderiler.map((item) => {
+        if (gonderiID === item.id) {
+          item.likes++;
+        }
+        return item;
+      })
+    );
+  };
+
+  const aramaYap = (aramaText) => {
+    let arr = [];
+    arr = sahteVeri.filter((item) => {
+      return item.username.includes(aramaText);
+    });
+    setGonderiler(arr);
+  };
+
+  const yorumEkle = (comment) => {
+    let newComment = { id: "", username: "", text: comment };
+    return sahteVeri.push(newComment);
   };
 
   return (
     <div className="App">
-      App Çalışıyor
-      {/* Yukarıdaki metni projeye başladığınızda silin*/}
-      {/* AramaÇubuğu ve Gönderiler'i render etmesi için buraya ekleyin */}
-      {/* Her bileşenin hangi proplara ihtiyaç duyduğunu kontrol edin, eğer ihtiyaç varsa ekleyin! */}
+      <div className="header-content">
+        <AramaCubugu aramaYap={aramaYap} />
+      </div>
+      <div className="gonderi-content">
+        <Gonderiler gonderiyiBegen={gonderiyiBegen} gonderiler={gonderiler} />
+      </div>
     </div>
   );
 };
