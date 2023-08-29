@@ -11,7 +11,7 @@ const Gonderiler = (props) => {
       {/* gönderiler dizisini işleyip her döngüde bir Gönderi bileşeni çağırın*/}
       {/* Gönderi'nin çağırılmasında hangi propları kullanmanız gerektiğine dikkat edin! */}
       {gonderiler.map((item) => (
-        <Gonderi gonderi={item} gonderiyiBegen={gonderiyiBegen} />
+        <Gonderi gonderi={item} key={item.id} gonderiyiBegen={gonderiyiBegen} />
       ))}
     </div>
   );

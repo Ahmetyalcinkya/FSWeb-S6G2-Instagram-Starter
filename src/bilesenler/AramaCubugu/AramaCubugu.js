@@ -10,7 +10,7 @@ import {
 import "./AramaCubugu.css";
 
 const AramaCubugu = (props) => {
-  const { aramaYap } = props;
+  const { search, aramaYap } = props;
   return (
     <div className="search-bar-wrapper">
       <div className="social">
@@ -20,7 +20,8 @@ const AramaCubugu = (props) => {
         <input
           type="text"
           placeholder="Arama"
-          onChange={(event) => aramaYap(event.target.value)}
+          value={search}
+          onChange={aramaYap}
         />
       </form>
       <div className="social-wrapper">

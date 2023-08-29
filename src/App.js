@@ -16,10 +16,12 @@ import "./App.css";
 
 const App = () => {
   // Gönderi nesneleri dizisini tutmak için "gonderiler" adlı bir state oluşturun, **sahteVeri'yi yükleyin**.
-  const [gonderiler, setGonderiler] = useState(sahteVeri);
+  const [posts, setPosts] = useState(sahteVeri);
   // Artık sahteVeri'ye ihtiyacınız olmayacak.
   // Arama çubuğunun çalışması için , arama kriterini tutacak başka bir state'e ihtiyacımız olacak.
-  const [arama, setArama] = useState("");
+  const [search, setSearch] = useState("");
+
+  const [liked, setLiked] = useState([]);
 
   const gonderiyiBegen = (gonderiID) => {
     /*
@@ -33,36 +35,39 @@ const App = () => {
         - gönderinin idsi "gonderiID" ile eşleşirse, istenen değerlerle yeni bir gönderi nesnesi döndürün.
         - aksi takdirde, sadece gönderi nesnesini değiştirmeden döndürün.
      */
-    setGonderiler(
-      gonderiler.map((item) => {
-        if (gonderiID === item.id) {
+    const guncelPosts = posts.map((item) => {
+      if (gonderiID === item.id) {
+        if (!liked.includes(gonderiID)) {
           item.likes++;
+          setLiked([...liked, gonderiID]);
+        } else {
+          item.likes--;
+          liked.splice(liked.indexOf(gonderiID), 1);
+          setLiked([...liked]);
         }
-        return item;
-      })
-    );
-  };
-
-  const aramaYap = (aramaText) => {
-    let arr = [];
-    arr = sahteVeri.filter((item) => {
-      return item.username.includes(aramaText);
+      }
+      return item;
     });
-    setGonderiler(arr);
+
+    setPosts(guncelPosts);
   };
 
-  const yorumEkle = (comment) => {
-    let newComment = { id: "", username: "", text: comment };
-    return sahteVeri.push(newComment);
+  const aramaYap = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    const searchResult = sahteVeri.filter((item) => {
+      return item.username.includes(value);
+    });
+    setPosts(searchResult);
   };
 
   return (
     <div className="App">
       <div className="header-content">
-        <AramaCubugu aramaYap={aramaYap} />
+        <AramaCubugu search={search} aramaYap={aramaYap} />
       </div>
       <div className="gonderi-content">
-        <Gonderiler gonderiyiBegen={gonderiyiBegen} gonderiler={gonderiler} />
+        <Gonderiler gonderiyiBegen={gonderiyiBegen} gonderiler={posts} />
       </div>
     </div>
   );
